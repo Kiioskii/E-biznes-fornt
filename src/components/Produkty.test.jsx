@@ -55,6 +55,13 @@ describe("Produkty", () => {
     expect(onRefresh).toHaveBeenCalledOnce();
   });
 
+  it("wyswietla pusta liste gdy brak produktow", () => {
+    renderProdukty({ produkty: [] });
+
+    expect(screen.queryByText("Laptop")).not.toBeInTheDocument();
+    expect(screen.getByRole("list")).toBeInTheDocument();
+  });
+
   it("wywoluje onAdd po kliknieciu Dodaj", async () => {
     const user = userEvent.setup();
     const onAdd = vi.fn();

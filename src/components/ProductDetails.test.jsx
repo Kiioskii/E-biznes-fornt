@@ -35,6 +35,15 @@ describe("ProductDetails", () => {
     expect(screen.getByText(/3999.99 PLN/)).toBeInTheDocument();
   });
 
+  it("pokazuje link powrotu do listy produktow", () => {
+    renderWithRouter(
+      <ProductDetails produkty={produkty} onAdd={vi.fn()} onRefresh={vi.fn()} />,
+      { route: "/products/1", path: "/products/:id" }
+    );
+
+    expect(screen.getByRole("link", { name: "Powrot do listy" })).toHaveAttribute("href", "/products");
+  });
+
   it("wywoluje onAdd po kliknieciu Dodaj do koszyka", async () => {
     const user = userEvent.setup();
     const onAdd = vi.fn();
