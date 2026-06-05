@@ -10,6 +10,7 @@ const produkty = [
 
 describe("App", () => {
   beforeEach(() => {
+    window.history.pushState({}, "", "/products");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -53,5 +54,53 @@ describe("App", () => {
     await waitFor(() => {
       expect(screen.getByText("Nie udalo sie pobrac produktow.")).toBeInTheDocument();
     });
+  });
+
+  it("pokazuje blad gdy fetch rzuca wyjatek", async () => {
+    fetch.mockRejectedValueOnce(new Error("Brak polaczenia"));
+
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Brak polaczenia")).toBeInTheDocument();
+    });
+  });
+
+  it("wyswietla koszyk i zmienia ilosc produktow", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Laptop")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getAllByRole("button", { name: "Dodaj" })[0]);
+    await user.click(screen.getByRole("link", { name: "Koszyk (1)" }));
+
+    expect(screen.getByRole("heading", { name: "Koszyk" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Platnosci" })).toBeInTheDocument();
+    expect(screen.getByText("Suma: 100.00 PLN")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "+" }));
+    expect(screen.getByText("Suma: 200.00 PLN")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: "-" }));
+    expect(screen.getByText("Suma: 100.00 PLN")).toBeInTheDocument();
+  });
+
+  it("usuwa produkt z koszyka gdy ilosc spadnie do zera", async () => {
+    const user = userEvent.setup();
+    render(<App />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Laptop")).toBeInTheDocument();
+    });
+
+    await user.click(screen.getAllByRole("button", { name: "Dodaj" })[0]);
+    await user.click(screen.getByRole("link", { name: "Koszyk (1)" }));
+    await user.click(screen.getByRole("button", { name: "-" }));
+
+    expect(screen.getByText("Dodaj produkty do koszyka.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Koszyk (0)" })).toBeInTheDocument();
   });
 });

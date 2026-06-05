@@ -58,4 +58,36 @@ describe("Platnosci", () => {
       })
     });
   });
+
+  it("pokazuje domyslna wiadomosc gdy API nie zwraca message", async () => {
+    const user = userEvent.setup();
+    fetch.mockResolvedValueOnce({ json: async () => ({}) });
+
+    render(<Platnosci apiUrl="http://localhost:8080/api" total={50} />);
+
+    await user.type(screen.getByPlaceholderText("Imie i nazwisko"), "Jan Kowalski");
+    await user.type(screen.getByPlaceholderText("Email"), "jan@example.com");
+    await user.type(screen.getByPlaceholderText("Adres"), "ul. Testowa 1");
+    await user.click(screen.getByRole("button", { name: "Zaplac" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Platnosc zapisana.")).toBeInTheDocument();
+    });
+  });
+
+  it("pokazuje blad gdy platnosc sie nie powiedzie", async () => {
+    const user = userEvent.setup();
+    fetch.mockRejectedValueOnce(new Error("Network error"));
+
+    render(<Platnosci apiUrl="http://localhost:8080/api" total={50} />);
+
+    await user.type(screen.getByPlaceholderText("Imie i nazwisko"), "Jan Kowalski");
+    await user.type(screen.getByPlaceholderText("Email"), "jan@example.com");
+    await user.type(screen.getByPlaceholderText("Adres"), "ul. Testowa 1");
+    await user.click(screen.getByRole("button", { name: "Zaplac" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Blad podczas platnosci.")).toBeInTheDocument();
+    });
+  });
 });

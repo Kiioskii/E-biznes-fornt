@@ -52,9 +52,12 @@ describe("Koszyk", () => {
     );
 
     const plusButtons = screen.getAllByRole("button", { name: "+" });
+    const minusButtons = screen.getAllByRole("button", { name: "-" });
     await user.click(plusButtons[0]);
+    await user.click(minusButtons[1]);
 
     expect(onChangeQuantity).toHaveBeenCalledWith(1, 1);
+    expect(onChangeQuantity).toHaveBeenCalledWith(2, -1);
   });
 
   it("wysyla koszyk do API", async () => {
@@ -87,6 +90,46 @@ describe("Koszyk", () => {
           { productId: 2, quantity: 1 }
         ]
       })
+    });
+  });
+
+  it("pokazuje domyslna wiadomosc gdy API nie zwraca message", async () => {
+    const user = userEvent.setup();
+    fetch.mockResolvedValueOnce({ json: async () => ({}) });
+
+    render(
+      <Koszyk
+        apiUrl="http://localhost:8080/api"
+        items={items}
+        total={250}
+        onChangeQuantity={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole("button", { name: "Wyslij koszyk" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Koszyk wyslany.")).toBeInTheDocument();
+    });
+  });
+
+  it("pokazuje blad gdy wysylka koszyka sie nie powiedzie", async () => {
+    const user = userEvent.setup();
+    fetch.mockRejectedValueOnce(new Error("Network error"));
+
+    render(
+      <Koszyk
+        apiUrl="http://localhost:8080/api"
+        items={items}
+        total={250}
+        onChangeQuantity={vi.fn()}
+      />
+    );
+
+    await user.click(screen.getByRole("button", { name: "Wyslij koszyk" }));
+
+    await waitFor(() => {
+      expect(screen.getByText("Blad podczas wysylki koszyka.")).toBeInTheDocument();
     });
   });
 });
