@@ -7,6 +7,9 @@
     "dev": "vite --host 0.0.0.0 --port 5173",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "cypress:open": "cypress open",
     "cypress:run": "cypress run",
     "test:e2e": "bash scripts/docker-test-env.sh cypress:run",
@@ -18,9 +21,15 @@
     "react-router-dom": "^7.16.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@vitejs/plugin-react": "^4.3.1",
+    "@vitest/coverage-v8": "^4.1.8",
     "cypress": "^15.16.0",
-    "wait-on": "^8.0.3",
-    "vite": "^5.3.4"
+    "jsdom": "^29.1.1",
+    "vite": "^5.3.4",
+    "vitest": "^4.1.8",
+    "wait-on": "^8.0.3"
   }
 }

@@ -1,0 +1,28 @@
+name: SonarCloud
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+
+jobs:
+    sonar:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run tests with coverage
+              run: npm run test -- --coverage
+
+            - name: SonarCloud Scan
+              uses: SonarSource/sonarcloud-github-action@v2
+              env:
+                  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+              with:
+                  args: >
+                      -Dsonar.projectKey=Kiioskii_E-biznes-fornt
+                      -Dsonar.organization=kiioskii
