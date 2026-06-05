@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop",
+    "description": "Lekki laptop 14 cali z 16 GB RAM i dyskiem SSD 512 GB.",
+    "price": 3999.99
+  },
+  {
+    "id": 2,
+    "name": "Mysz bezprzewodowa",
+    "description": "Ergonomiczna mysz Bluetooth z cichymi przyciskami.",
+    "price": 149.0
+  },
+  {
+    "id": 3,
+    "name": "Klawiatura mechaniczna",
+    "description": "Klawiatura RGB z przelacznikami tactile i hot-swap.",
+    "price": 329.5
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "name": "shop-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0 --port 5173",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0 --port 4173",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "bash scripts/docker-test-env.sh cypress:run",
+    "test:e2e:open": "bash scripts/docker-test-env.sh cypress:open"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.16.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "cypress": "^15.16.0",
+    "wait-on": "^8.0.3",
+    "vite": "^5.3.4"
+  }
+}
